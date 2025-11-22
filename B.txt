@@ -1,0 +1,148 @@
+@startuml
+title Hospital Class Diagram
+
+class Hospital {
+  - name: String
+  - address: String
+  + addDepartment(d: Department)
+}
+
+class Department {
+  - name: String
+  + addDoctor(d: Doctor)
+  + addPatient(p: Patient)
+}
+
+class Person {
+  - id: int
+  - name: String
+  - dob: Date
+}
+
+class Doctor {
+  - specialization: String
+  - licenseNo: String
+  + diagnose(p: Patient)
+}
+
+class Patient {
+  - medicalRecordNo: String
+  - allergies: String[]
+  + getHistory(): History
+}
+
+class Appointment {
+  - apptId: int
+  - dateTime: DateTime
+  - status: String
+  + reschedule(dt: DateTime)
+}
+
+class MedicalRecord {
+  - recordId: int
+  - entries: List<Entry)
+  + addEntry(e: Entry)
+}
+
+Person <|-- Doctor
+Person <|-- Patient
+Hospital "1" o-- "many" Department
+Department "1" o-- "many" Doctor
+Department "1" o-- "many" Patient
+Doctor "1" -- "many" Appointment
+Patient "1" -- "many" Appointment
+Patient "1" o-- "1" MedicalRecord
+MedicalRecord "1" o-- "*" Entry
+
+@enduml
+
+
+@startuml
+title College Management System - Class Diagram
+
+class College {
+  - name: String
+  - address: String
+  + addDepartment(d: Department)
+}
+
+class Department {
+  - name: String
+  + addCourse(c: Course)
+  + addStaff(s: Staff)
+}
+
+class Person {
+  - id: int
+  - name: String
+  - email: String
+}
+
+class Student {
+  - rollNo: String
+  - courses: List<Course>
+  + enroll(course: Course)
+}
+
+class Staff {
+  - staffId: String
+  - role: String
+}
+
+class Course {
+  - code: String
+  - title: String
+  - credits: int
+  + assignInstructor(staff: Staff)
+}
+
+class Examination {
+  - examId: int
+  - date: Date
+  + schedule()
+}
+
+Person <|-- Student
+Person <|-- Staff
+College "1" o-- "many" Department
+Department "1" o-- "many" Course
+Department "1" o-- "many" Staff
+Student "many" -- "many" Course : enrolls
+Course "1" -- "many" Examination
+
+@enduml
+
+
+@startuml
+left to right direction
+title Hospital Use Case Diagram
+
+actor Receptionist
+actor Doctor
+actor Patient
+actor Admin
+
+rectangle "Hospital System" {
+  usecase "Register Patient" as UC1
+  usecase "Schedule Appointment" as UC2
+  usecase "Update Medical Record" as UC3
+  usecase "Prescribe Medication" as UC4
+  usecase "Generate Bill" as UC5
+  usecase "Manage Staff" as UC6
+}
+
+Receptionist --> UC1
+Receptionist --> UC2
+Receptionist --> UC5
+Patient --> UC2
+Doctor --> UC3
+Doctor --> UC4
+Admin --> UC6
+Admin --> UC5
+
+UC2 .> UC1 : <<include>>
+UC4 .> UC3 : <<include>>
+
+@enduml
+
+
