@@ -1,0 +1,173 @@
+maven java 
+new item          maven web build 
+freestyle 
+--- maven java build -- click ok
+description: "java build demo"
+source code management (git URL)
+branches to build */ main or */master
+add build steps -> "invoke top level maven "
+		    clean 
+ 		add - install
+port build :action ->add->"achieve the artifacts"
+files to arc- **/*
+add -> build other projects " web 
+projects to build maven java _test 
+only if build is stable -> apply save 
+
+test
+freestyle 
+mavenjava_test-> click ok
+description ="test demo "
+build env -delete workspace
+add build steps ->copy artifacts
+prj name :Maven java _build 
+stab
+artifacts : **/*
+add - invoke - test
+add port build action -> arch i
+**/* apply save 
+
+pipeline 
+maven-java pipeline -build pipeline view
+layout: based on upstream / downstream rel
+initial job:mavenjava_build apply save ok
+run 
+
+
+Maven web -deploy
+Dscrription :"web code deployment "
+build env -dele
+add build_steps "copy arti"
+prj name :maven web_test
+stable build only 
+artifacts to copy **/*
+port build action add -"deploy WAR /JAR to a cont"
+WAR/JAR file : **/*.war
+context path -> tomcat 9.xremote
+credentials : username :admin ,pass: 1234
+tomcat url :https://localhost :8085/
+apply &save 
+pipeline is (maven web _pipeline) 
+
+------------------------------------------------------------------------------------------------------
+
+AWS
+Step 1: Login to AWS /canvas account
+Step 2: Services --  EC2
+Step 3: Choose region which is near ?  
+	Services -- EC2 --- Launch Instance 
+	Stage 1  --Name (Giving name to the machine) ubuntu
+	Stage 2  -- Select AMI  ( Note: Select free tier eligible ) ubuntu server
+	Stage 3   --  Architecture as 64-bit	  
+	Stage 4  --  Instance type ----  t2.micro(default 1 CPU,1 GB RAM)
+	Stage 5  --  Create a new keypair---a keypair will downloaded  with extension .pem
+                              Store key in folder AWS
+	Stage 6  -- Network Setting ----Create Security group  --  ( It deals with ports )
+	(Note for understanding We have 0 to 65535 ports. Every port is dedicated to special purpose)		
+Do this step : HERE select http and https
+   Stage 7 -- Storage - 8GB ( Observation - we have root - it is same as C Drive)
+         Stage 8 --- click on launch instance
+    Stage 9: Number of instances ---1
+
+.pem path open cmg 
+cd path 
+ssh command after clicking connect types yes
+sudo apt update 
+sudo apt -get install docker.io 
+sudo apt intall git 
+sudo apt install nano 
+create index.html
+---
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>My WebApp</title>
+</head>
+<body>
+<h1>Welcome to My WebApp deployed on AWS</h1>
+</body>
+</html>
+
+-----
+open html in git bash 
+open GitHub create a new repo awsexample
+git init 
+git add.
+git commit-m "first commit"
+
+find steps like git branch -M main
+git remote add origin 
+git push -u origin main 
+refresh GitHub after running this u will see index.html
+copy http path in GitHub 
+open cmd continue coding coding 
+-git clone http path 
+-ls  awsexample
+-cd aws example
+-ls index.html
+-nano dockerfile 
+---
+
+From nginx:alphine
+COPY ./usr/share/nginx/html
+ctrl o ,ctrl x
+---
+-sudo docker build -t mywebapp
+-sudo docker run-d -p 80:80 mywebapp
+goback click on instances 
+click on instances >i---click on that 
+public ipv4 address cop that 
+new tab paste it (if it doesn't work remove s from https & run)
+opem cmd 
+-sudo docker ps
+-sudo docker stop container id 
+terminate delete 
+
+---------------------------------------------------------------------------------------------------------
+
+
+MINIKUBE NGINX
+
+open powershell 
+- minikube start 
+- minikube status
+- kubectl create deployment mynginx --image =nginx
+- kubectl get deployments
+   mynginx 
+- kubectl expose deployment mynginx --type=NodePort --port=80 --target-port=80
+- kubectl scale deployment mynginx --replicas=4
+- kubectl get deployemnts 
+- kubectl get pods 
+- kubectl port-forward svc/mynginx 8081:80
+open chrome localhost :8081(welcome page will open http://localhost:8081.)
+open new powershell 
+- minikube dashboard(it directly opens kubernets dashbord)
+previos powershell 
+- kubectl delete deployment mynginx 
+- kubectl delete service mynginx
+- minikube stop 
+
+---------------------------------------------------------------------------------------------------------------
+
+
+NAGIOS
+
+open docker 
+open powershell
+- docker pull jasonrivers/nagios:latest (once download click on img )
+- docker start -ai nagios4 (It should show Nagios is Successfully launched)
+-> docker run --name nagios demo -p 8888:80 jasonrivers/nagios:latest
+-open browser Type  locahost:8888
+signin
+---Nagiosid : Adminnagios
+---Pwd :nagios 
+(after u ll get a page)
+click on host on left side 
+click on localhost 
+open new powershell 
+-docker ps
+-docker stop nagiosdemo (or)can take container id 
+-docker rm nagiosdemo (OR)
+-docker images
+-docker rmi imagename(or)jasonrivers/nagios
