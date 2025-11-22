@@ -1,85 +1,291 @@
-# FDMS
-maven java 
-new item          maven web build 
-freestyle 
---- maven java build -- click ok
-description: "java build demo"
-source code management (git URL)
-branches to build */ main or */master
-add build steps -> "invoke top level maven "
-		    clean 
- 		add - install
-port build :action ->add->"achieve the artifacts"
-files to arc- **/*
-add -> build other projects " web 
-projects to build maven java _test 
-only if build is stable -> apply save 
 
-test
-freestyle 
-mavenjava_test-> click ok
-description ="test demo "
-build env -delete workspace
-add build steps ->copy artifacts
-prj name :Maven java _build 
-stab
-artifacts : **/*
-add - invoke - test
-add port build action -> arch i
-**/* apply save 
+# ----------------------------------------------------------
 
-pipeline 
-maven-java pipeline -build pipeline view
-layout: based on upstream / downstream rel
-initial job:mavenjava_build apply save ok
-run 
+# ✅ **SECTION 1 — MAVEN JAVA (FREESTYLE JOB → BUILD → TEST → PIPELINE VIEW)**
 
+# ----------------------------------------------------------
 
-Maven web -deploy
-Dscrription :"web code deployment "
-build env -dele
-add build_steps "copy arti"
-prj name :maven web_test
-stable build only 
-artifacts to copy **/*
-port build action add -"deploy WAR /JAR to a cont"
-WAR/JAR file : **/*.war
-context path -> tomcat 9.xremote
-credentials : username :admin ,pass: 1234
-tomcat url :https://localhost :8085/
-apply &save 
-pipeline is (maven web _pipeline) 
+# 🔸 **1. Maven Java – Build Job (FREESTYLE)**
 
-------------------------------------------------------------------------------------------------------
+### **Step 1 — Open Jenkins**
 
-AWS
-Step 1: Login to AWS /canvas account
-Step 2: Services --  EC2
-Step 3: Choose region which is near ?  
-	Services -- EC2 --- Launch Instance 
-	Stage 1  --Name (Giving name to the machine) ubuntu
-	Stage 2  -- Select AMI  ( Note: Select free tier eligible ) ubuntu server
-	Stage 3   --  Architecture as 64-bit	  
-	Stage 4  --  Instance type ----  t2.micro(default 1 CPU,1 GB RAM)
-	Stage 5  --  Create a new keypair---a keypair will downloaded  with extension .pem
-                              Store key in folder AWS
-	Stage 6  -- Network Setting ----Create Security group  --  ( It deals with ports )
-	(Note for understanding We have 0 to 65535 ports. Every port is dedicated to special purpose)		
-Do this step : HERE select http and https
-   Stage 7 -- Storage - 8GB ( Observation - we have root - it is same as C Drive)
-         Stage 8 --- click on launch instance
-    Stage 9: Number of instances ---1
+```
+http://localhost:8080
+```
 
-.pem path open cmg 
-cd path 
-ssh command after clicking connect types yes
-sudo apt update 
-sudo apt -get install docker.io 
-sudo apt intall git 
-sudo apt install nano 
-create index.html
+### **Step 2 — Create New Freestyle Job**
+
+* Click **New Item**
+* Enter name: `maven_java_build`
+* Select **Freestyle project**
+* Click **OK**
+
+### **Step 3 — Add Job Description**
+
+```
+java build demo
+```
+
+### **Step 4 — Source Code Management**
+
+* Choose **Git**
+* Git URL → paste your repository URL
+* Branches to build:
+
+```
+*/main
+```
+
+OR
+
+```
+*/master
+```
+
+### **Step 5 — Add Build Steps**
+
+* Click **Add build step → Invoke top-level Maven targets**
+* Goal:
+
+```
+clean install
+```
+
+### **Step 6 — Post-build Actions**
+
+* Add → **Archive the artifacts**
+* Files to archive:
+
+```
+**/*
+```
+
+* Add → **Build other projects**
+
+  * Project to build:
+
+```
+maven_java_test
+```
+
+* Trigger: **Only if build is stable**
+
+### **Step 7 — Apply → Save → Build Now**
+
 ---
 
+# 🔸 **2. Maven Java – Test Job (FREESTYLE)**
+
+### **Step 1 — Create Test Job**
+
+* New Item → `maven_java_test` → Freestyle → OK
+
+### **Step 2 — Description**
+
+```
+test demo
+```
+
+### **Step 3 — Build Environment**
+
+* Check **Delete workspace before build starts**
+
+### **Step 4 — Copy Artifacts**
+
+* Add build step → **Copy artifacts from another project**
+
+  * Project name:
+
+```
+maven_java_build
+```
+
+* Which build: **Stable**
+* Artifacts:
+
+```
+**/*
+```
+
+### **Step 5 — Add Maven Test Step**
+
+* Add build step → Invoke top-level Maven
+* Goal:
+
+```
+test
+```
+
+### **Step 6 — Post-build Actions**
+
+* Add → Archive the artifacts
+
+```
+**/*
+```
+
+### **Step 7 — Apply → Save → Build**
+
+---
+
+# 🔸 **3. Maven Java – Pipeline View (UPSTREAM → DOWNSTREAM)**
+
+### **Step 1 — Create Pipeline View**
+
+* Jenkins → **New View** → choose **Pipeline View**
+* Name: `maven-java-pipeline`
+* OK
+
+### **Step 2 — Configure View**
+
+* Layout: **Based on upstream/downstream relationship**
+* Initial Job:
+
+```
+maven_java_build
+```
+
+### **Step 3 — Apply → Save**
+
+### **Step 4 — Run Build Pipeline**
+
+---
+
+# ----------------------------------------------------------
+
+# ✅ **SECTION 2 — MAVEN WEB APP DEPLOYMENT (FREESTYLE + TOMCAT DEPLOY)**
+
+# ----------------------------------------------------------
+
+# 🔸 **4. Maven Web – DEPLOY JOB**
+
+### **Step 1 — Create Freestyle Job**
+
+* New Item → `maven_web_deploy` → Freestyle → OK
+
+### **Step 2 — Description**
+
+```
+web code deployment
+```
+
+### **Step 3 — Build Environment**
+
+* Check **Delete workspace before build**
+
+### **Step 4 — Copy Artifacts**
+
+* Add build step → Copy artifacts from:
+
+```
+maven_web_test
+```
+
+* Choose: **Stable build only**
+* Artifacts:
+
+```
+**/*
+```
+
+### **Step 5 — Post-build Action → Deploy WAR/JAR**
+
+* Deploy WAR/JAR to a container
+  Fields:
+
+| Field          | Value                    |
+| -------------- | ------------------------ |
+| WAR/JAR file   | `**/*.war`               |
+| Context path   | `/`                      |
+| Tomcat Version | Tomcat 9.x Remote        |
+| Username       | `admin`                  |
+| Password       | `1234`                   |
+| Tomcat URL     | `http://localhost:8085/` |
+
+### **Step 6 — Apply → Save → Build**
+
+---
+
+# ----------------------------------------------------------
+
+# ✅ **SECTION 3 — AWS EC2 + DOCKER + WEBAPP DEPLOYMENT**
+
+# ----------------------------------------------------------
+
+# 🔸 **1. Launch EC2 Instance**
+
+### **Step-by-step**
+
+1. Login to AWS
+2. Go to **Services → EC2**
+3. Choose nearest region
+4. Click **Launch Instance**
+5. Name:
+
+```
+ubuntu
+```
+
+6. Select **Free Tier Ubuntu AMI**
+7. Architecture: **64-bit**
+8. Instance type:
+
+```
+t2.micro
+```
+
+9. Create key pair → downloads `.pem`
+10. Security Group → allow:
+
+    * SSH (22)
+    * HTTP (80)
+11. Storage → 8GB
+12. Launch
+
+---
+
+# 🔸 **2. Connect to EC2**
+
+### **Step 1 — Go to your .pem folder**
+
+```
+cd path/to/AWS
+```
+
+### **Step 2 — SSH connect**
+
+```
+ssh -i key.pem ubuntu@<PUBLIC_IP>
+```
+
+Type:
+
+```
+yes
+```
+
+---
+
+# 🔸 **3. Install Packages on EC2**
+
+```
+sudo apt update
+sudo apt-get install docker.io
+sudo apt install git
+sudo apt install nano
+```
+
+---
+
+# 🔸 **4. Create index.html**
+
+```
+nano index.html
+```
+
+Paste:
+
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -89,369 +295,42 @@ create index.html
 <h1>Welcome to My WebApp deployed on AWS</h1>
 </body>
 </html>
+```
 
------
-open html in git bash 
-open GitHub create a new repo awsexample
-git init 
-git add.
-git commit-m "first commit"
-
-find steps like git branch -M main
-git remote add origin 
-git push -u origin main 
-refresh GitHub after running this u will see index.html
-copy http path in GitHub 
-open cmd continue coding coding 
--git clone http path 
--ls  awsexample
--cd aws example
--ls index.html
--nano dockerfile 
----
-
-From nginx:alphine
-COPY ./usr/share/nginx/html
-ctrl o ,ctrl x
----
--sudo docker build -t mywebapp
--sudo docker run-d -p 80:80 mywebapp
-goback click on instances 
-click on instances >i---click on that 
-public ipv4 address cop that 
-new tab paste it (if it doesn't work remove s from https & run)
-opem cmd 
--sudo docker ps
--sudo docker stop container id 
-terminate delete 
-
----------------------------------------------------------------------------------------------------------
-
-
-MINIKUBE NGINX
-
-open powershell 
-- minikube start 
-- minikube status
-- kubectl create deployment mynginx --image =nginx
-- kubectl get deployments
-   mynginx 
-- kubectl expose deployment mynginx --type=NodePort --port=80 --target-port=80
-- kubectl scale deployment mynginx --replicas=4
-- kubectl get deployemnts 
-- kubectl get pods 
-- kubectl port-forward svc/mynginx 8081:80
-open chrome localhost :8081(welcome page will open http://localhost:8081.)
-open new powershell 
-- minikube dashboard(it directly opens kubernets dashbord)
-previos powershell 
-- kubectl delete deployment mynginx 
-- kubectl delete service mynginx
-- minikube stop 
-
----------------------------------------------------------------------------------------------------------------
-
-
-NAGIOS
-
-open docker 
-open powershell
-- docker pull jasonrivers/nagios:latest (once download click on img )
-- docker start -ai nagios4 (It should show Nagios is Successfully launched)
--> docker run --name nagios demo -p 8888:80 jasonrivers/nagios:latest
--open browser Type  locahost:8888
-signin
----Nagiosid : Adminnagios
----Pwd :nagios 
-(after u ll get a page)
-click on host on left side 
-click on localhost 
-open new powershell 
--docker ps
--docker stop nagiosdemo (or)can take container id 
--docker rm nagiosdemo (OR)
--docker images
--docker rmi imagename(or)jasonrivers/nagios
-
-
-
-# ⭐ **FULL LAB MANUAL — EXAM FLOW VERSION (BEGINNER FRIENDLY)**
-
-### Covers all: Jenkins (3 tasks) + Minikube (2 tasks) + Maven+Docker+EC2 + Nagios (2 tasks)
+Save:
+`CTRL + O`, ENTER, then `CTRL + X`
 
 ---
 
-# ----------------------------------------------------------
+# 🔸 **5. Push File to GitHub**
 
-# ✅ **SECTION 1 — JENKINS LAB QUESTIONS**
-
-# ----------------------------------------------------------
-
-# 🔸 **1. Jenkins Pipeline for Java Project (Declarative Pipeline)**
-
-### **Step 1 — Open Jenkins**
+### In git bash (local machine):
 
 ```
-http://localhost:8080
+git init
+git add .
+git commit -m "first commit"
+git branch -M main
+git remote add origin <GitHub repo URL>
+git push -u origin main
 ```
 
-### **Step 2 — New Item**
-
-* Click **New Item**
-* Enter name: *java-declarative*
-* Select **Pipeline**
-* Click **OK**
-
-### **Step 3 — Scroll to Pipeline → Paste Script**
-
-```groovy
-pipeline {
-  agent any
-  tools { maven 'Maven3' jdk 'JDK11' }
-  stages {
-    stage('Checkout') { steps { checkout scm } }
-    stage('Build') { steps { sh 'mvn clean package -DskipTests' } }
-    stage('Test')  { steps { sh 'mvn test' } }
-    stage('Docker Build') { steps { sh 'docker build -t javaapp:v1 .' } }
-  }
-}
-```
-
-### **Step 4 — Save → Build Now**
-
-### **Step 5 — Screenshot**
-
-* Console output with
-  ✔ BUILD SUCCESS
-  ✔ Docker build logs
+Refresh GitHub → you will see `index.html`.
 
 ---
 
-# 🔸 **2. Jenkins Scripted Pipeline (Java Project)**
-
-### **Step 1 — Create job**
-
-* New Item → *java-scripted* → Pipeline → OK
-
-### **Step 2 — Paste Script**
-
-```groovy
-node {
-  stage('Checkout') { checkout scm }
-  stage('Build') {
-    def mvn = tool 'Maven3'
-    sh "${mvn}/bin/mvn clean package"
-  }
-  stage('Docker Build') {
-    sh "docker build -t javaapp-scripted:v1 ."
-  }
-}
-```
-
-### **Step 3 — Save → Build Now**
-
-### **Step 4 — Screenshot**
-
-* Console output showing Maven and Docker logs
-
----
-
-# 🔸 **3. Jenkins Pipeline for Web Project (Node.js / React)**
-
-### **Step 1 — Create job**
-
-* New Item → *web-pipeline* → Pipeline → OK
-
-### **Step 2 — Paste Script**
-
-```groovy
-pipeline {
-  agent any
-  stages {
-    stage('Checkout') { steps { checkout scm } }
-    stage('Install')  { steps { sh 'npm install' } }
-    stage('Build')    { steps { sh 'npm run build' } }
-    stage('Docker')   { steps { sh 'docker build -t webapp:v1 .' } }
-  }
-}
-```
-
-### **Step 3 — Build Now**
-
-### **Step 4 — Screenshot**
-
-* npm install
-* npm run build
-* docker build logs
-
----
-
-# ----------------------------------------------------------
-
-# ✅ **SECTION 2 — MINIKUBE + KUBERNETES LAB QUESTIONS**
-
-# ----------------------------------------------------------
-
-# 🔸 **4. Minikube — Create Nginx Deployment + local host 8090 + list pods/services**
-
-### **Step 1 — Start Minikube**
+# 🔸 **6. Clone Repo on EC2**
 
 ```
-minikube start
-minikube status
-```
-
-### **Step 2 — Create nginx deployment**
-
-```
-kubectl create deployment nginx --image=nginx
-```
-
-### **Step 3 — Expose service**
-
-```
-kubectl expose deployment nginx --type=NodePort --port=80 --name=nginx-service
-```
-
-### **Step 4 — List pods & services**
-
-```
-kubectl get pods
-kubectl get svc
-```
-
-### **Step 5 — Forward to localhost:8090**
-
-```
-kubectl port-forward svc/nginx-service 8090:80
-```
-
-### **Step 6 — Browser**
-
-```
-http://localhost:8090
-```
-
-### **Step 7 — Screenshot**
-
-* Pods list
-* Service list
-* Browser Nginx Welcome Page
-
----
-
-# 🔸 **5. Full Minikube Cluster Workflow (status → deploy → scale → expose)**
-
-### **Step 1 — Check cluster**
-
-```
-minikube start
-minikube status
-```
-
-### **Step 2 — Create deployment**
-
-```
-kubectl create deployment nginx --image=nginx
-```
-
-### **Step 3 — Scale replicas**
-
-```
-kubectl scale deployment nginx --replicas=5
-```
-
-### **Step 4 — Check pods**
-
-```
-kubectl get pods
-```
-
-### **Step 5 — Expose service**
-
-```
-kubectl expose deployment nginx --type=NodePort --port=80
-```
-
-### **Step 6 — Get service URL**
-
-```
-minikube service nginx --url
-```
-
-or use port-forward (simple):
-
-```
-kubectl port-forward svc/nginx 8090:80
-```
-
-### **Step 7 — Screenshot**
-
-* `minikube status`
-* `kubectl get pods` (showing 5 replicas)
-* Browser showing Nginx
-
----
-
-# ----------------------------------------------------------
-
-# ✅ **SECTION 3 — MAVEN + DOCKER + EC2 LAB QUESTIONS**
-
-# ----------------------------------------------------------
-
-# 🔸 **6. Maven Web Project Deployment using Docker on EC2**
-
-## **▶ PART A — Launch EC2**
-
-### **Step 1 — Create EC2 Instance**
-
-* Ubuntu 22.04
-* Open inbound ports: **22**, **9090**
-
----
-
-## **▶ PART B — Install tools (git, maven, docker)**
-
-### **Step 2 — SSH into EC2**
-
-```
-ssh -i key.pem ubuntu@EC2_PUBLIC_IP
-```
-
-### **Step 3 — Install packages**
-
-```
-sudo apt update
-sudo apt install -y git maven openjdk-11-jdk docker.io
-sudo usermod -aG docker ubuntu
-newgrp docker
+git clone <GitHub repo URL>
+ls
+cd awsexample
+ls index.html
 ```
 
 ---
 
-## **▶ PART C — Build Maven Project**
-
-### **Step 4 — Clone project**
-
-```
-git clone https://github.com/your/repo.git
-cd repo
-```
-
-### **Step 5 — Build**
-
-```
-mvn clean package
-```
-
-**Screenshot needed:**
-✔ Maven BUILD SUCCESS
-
----
-
-## **▶ PART D — Dockerize & Run**
-
-### **Step 6 — Create Dockerfile**
+# 🔸 **7. Create Dockerfile**
 
 ```
 nano Dockerfile
@@ -460,135 +339,190 @@ nano Dockerfile
 Paste:
 
 ```dockerfile
-FROM eclipse-temurin:11-jre
-COPY target/*.jar app.jar
-EXPOSE 9090
-ENTRYPOINT ["java","-jar","/app.jar","--server.port=9090"]
+FROM nginx:alpine
+COPY . /usr/share/nginx/html
 ```
 
-### **Step 7 — Build Docker Image**
+Save.
+
+---
+
+# 🔸 **8. Build Image**
 
 ```
-docker build -t mavenapp:v1 .
+sudo docker build -t mywebapp .
 ```
 
-### **Step 8 — Run container on port 9090**
+---
+
+# 🔸 **9. Run Container**
 
 ```
-docker run -d -p 9090:9090 --name app mavenapp:v1
+sudo docker run -d -p 80:80 mywebapp
 ```
 
-### **Step 9 — Test**
+---
+
+# 🔸 **10. View on Browser**
+
+Copy EC2 public IP → Paste in browser:
 
 ```
-curl localhost:9090
+http://<EC2_PUBLIC_IP>
 ```
 
-### **Step 10 — Browser**
+If needed:
 
-Open:
+* remove `s` from https
+
+---
+
+# 🔸 **11. Cleanup**
 
 ```
-http://EC2_PUBLIC_IP:9090
+sudo docker ps
+sudo docker stop <container_id>
+sudo docker rm <container_id>
 ```
 
-**Screenshot:**
-✔ EC2 browser output page
+Terminate EC2 instance.
 
 ---
 
 # ----------------------------------------------------------
 
-# ✅ **SECTION 4 — NAGIOS LAB QUESTIONS**
+# ✅ **SECTION 4 — MINIKUBE NGINX COMPLETE WORKFLOW**
 
 # ----------------------------------------------------------
 
-# 🔸 **7. Nagios — Pull → Run → Monitor → Dashboard**
+# 🔸 **Full Minikube Nginx Deployment**
 
-### **Step 1 — Pull Nagios image**
-
-```
-docker pull jasonrivers/nagios
-```
-
-### **Step 2 — Run Nagios**
+### **Step 1 — Open PowerShell**
 
 ```
-docker run -d --name nagios -p 8080:80 jasonrivers/nagios
+minikube start
+minikube status
 ```
 
-### **Step 3 — Open Dashboard**
+### **Step 2 — Create Nginx Deployment**
 
 ```
-http://localhost:8080/nagios
+kubectl create deployment mynginx --image=nginx
 ```
 
-### **Default Login**
-
-* **Username:** nagiosadmin
-* **Password:** nagiosadmin
-
----
-
-# 🔸 **8. Nagios — Configure CPU Usage + Uptime (Simple Version)**
-
-### **Step 1 — Create config folder**
+### **Step 3 — Check deployments**
 
 ```
-mkdir ~/nagios_conf
+kubectl get deployments
 ```
 
-### **Step 2 — Create new config file**
+### **Step 4 — Expose it**
 
 ```
-nano ~/nagios_conf/localhost.cfg
+kubectl expose deployment mynginx --type=NodePort --port=80 --target-port=80
 ```
 
-Paste:
-
-```cfg
-define host {
-  use         linux-server
-  host_name   local
-  address     127.0.0.1
-}
-
-define service {
-  use generic-service
-  host_name local
-  service_description CPU Load
-  check_command check_load!5,4,3!10,6,4
-}
-
-define service {
-  use generic-service
-  host_name local
-  service_description Ping Check
-  check_command check_ping!100.0,20%!500.0,60%
-}
-```
-
-### **Step 3 — Run Nagios with config mounted**
+### **Step 5 — Scale to 4 replicas**
 
 ```
-docker run -d --name nagios \
-  -p 8080:80 \
-  -v ~/nagios_conf:/opt/nagios/etc \
-  jasonrivers/nagios
+kubectl scale deployment mynginx --replicas=4
 ```
 
-### **Step 4 — Open Dashboard**
+### **Step 6 — Check**
 
 ```
-http://localhost:8080/nagios
+kubectl get deployments
+kubectl get pods
 ```
 
-### **Step 5 — Screenshot**
+### **Step 7 — Port-forward**
 
-* Host list
-* CPU Load
-* Ping uptime
+```
+kubectl port-forward svc/mynginx 8081:80
+```
+
+### **Step 8 — Browser**
+
+```
+http://localhost:8081
+```
+
+(Nginx welcome page)
+
+### **Step 9 — Open Minikube Dashboard**
+
+Open second PowerShell:
+
+```
+minikube dashboard
+```
+
+### **Step 10 — Cleanup**
+
+```
+kubectl delete deployment mynginx
+kubectl delete service mynginx
+minikube stop
+```
 
 ---
 
 # ----------------------------------------------------------
+
+# ✅ **SECTION 5 — NAGIOS USING DOCKER**
+
+# ----------------------------------------------------------
+
+# 🔸 **Nagios Installation & Monitoring**
+
+### **Step 1 — Open Docker Desktop**
+
+### **Step 2 — Open PowerShell**
+
+```
+docker pull jasonrivers/nagios:latest
+```
+
+### **Step 3 — Run Nagios**
+
+```
+docker run --name nagiosdemo -p 8888:80 jasonrivers/nagios:latest
+```
+
+### **Step 4 — Open Browser**
+
+```
+http://localhost:8888
+```
+
+### **Step 5 — Login**
+
+* Username:
+
+```
+Adminnagios
+```
+
+* Password:
+
+```
+nagios
+```
+
+### **Step 6 — Check Monitoring**
+
+Left sidebar → **Hosts → localhost**
+
+---
+
+# 🔸 **Cleanup**
+
+```
+docker ps
+docker stop nagiosdemo
+docker rm nagiosdemo
+docker images
+docker rmi jasonrivers/nagios:latest
+```
+
+---
