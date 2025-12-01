@@ -2,7 +2,7 @@ https://tinyurl.com/54zhm7uf  ss
 https://tinyurl.com/3jpyetus vv
 https://tinyurl.com/4rnmvwxf m1
 
-Perfect — I converted all 10 problems into the exact copy-pasteable how-to format you gave (same headings, numbered sections, code blocks, tables). Each numbered question (1–10) contains parts **a, b, c, d** with ready-to-use commands, PlantUML text for diagrams, Jenkins / Maven / Docker / Kubernetes / Nagios snippets, and placeholders you can replace (GitHub repo URL, EC2 public IP, credentials). Copy each section directly into your repo README or separate files — everything is plain text/code blocks.
+
 
 > ⚠️ Replace placeholders like `<GIT_REPO_URL>`, `<PUBLIC_IP>`, `<USERNAME>`, `<DEPLOY_SERVER>`, `<KEY.pem>`, and credentials before running commands.
 
